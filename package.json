@@ -1,0 +1,19 @@
+{
+  "name": "@mheap/action-router",
+  "version": "1.0.0",
+  "description": "Route your GitHub Actions events to the correct handler",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "GitHub",
+    "Actions",
+    "Router"
+  ],
+  "author": "Michael Heap <m@michaelheap.com> (https://michaelheap.com)",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^25.1.0"
+  }
+}
