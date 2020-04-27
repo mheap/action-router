@@ -18,6 +18,7 @@ test("throws when the current event isn't listed", () => {
       {
         "issue.created": function() {}
       },
+      [],
       "pull_request.labeled"
     )
   ).toThrow("No entries found for 'pull_request.labeled'");
@@ -29,6 +30,7 @@ test("throws when there are no functions defined for an event", () => {
       {
         "pull_request.labeled": []
       },
+      [],
       "pull_request.labeled"
     )
   ).toThrow(`No functions defined for 'pull_request.labeled'`);
@@ -40,6 +42,7 @@ test("throws when the provided entry isn't a function", () => {
       {
         "pull_request.labeled": [function() {}, "Hello", true]
       },
+      [],
       "pull_request.labeled"
     )
   ).toThrow("Not a function: Hello, true");
@@ -76,6 +79,7 @@ test("executes with an event subtype", () => {
     {
       "pull_request.labeled": [fn]
     },
+    [],
     "pull_request.labeled"
   );
 
@@ -88,6 +92,7 @@ test("executes without an event subtype", () => {
     {
       pull_request: [fn]
     },
+    [],
     "pull_request.labeled"
   );
 
@@ -100,6 +105,7 @@ test("does not pass anything to the executed function", () => {
     {
       pull_request: [fn]
     },
+    [],
     "pull_request.labeled"
   );
 
@@ -108,12 +114,26 @@ test("does not pass anything to the executed function", () => {
   expect(fn).toHaveBeenCalledWith();
 });
 
+test("passes any parameters defined", () => {
+  const fn = jest.fn();
+  const arg = jest.fn();
+  router(
+    {
+      pull_request: [fn]
+    },
+    ["foo"],
+    "pull_request.labeled"
+  );
+  expect(fn).toHaveBeenCalledWith("foo");
+});
+
 test("supports a single function being passed", () => {
   const fn = jest.fn();
   router(
     {
       pull_request: fn
     },
+    [],
     "pull_request.labeled"
   );
   expect(fn).toBeCalled();
@@ -125,6 +145,7 @@ test("supports an array of functions being passed", () => {
     {
       pull_request: [fn]
     },
+    [],
     "pull_request.labeled"
   );
   expect(fn).toBeCalled();
@@ -137,6 +158,7 @@ test("runs multiple functions if provided", () => {
     {
       pull_request: [fn, fn2]
     },
+    [],
     "pull_request.labeled"
   );
 
@@ -152,6 +174,7 @@ test("returns an array of promises", async () => {
     {
       pull_request: [fn, fn2]
     },
+    [],
     "pull_request.labeled"
   );
 

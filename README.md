@@ -29,12 +29,23 @@ router({
 
 You can even run multiple methods in response to an event:
 
-```
+```javascript
 router({
   "pull_request.opened": [
     openAction, 
     () => { console.log("This runs too") }
   ]
 });
+```
+
+If you need to pass any data to each called method, you can specify it as the second parameter in `router`:
+
+```javascript
+router({
+  "pull_request.opened": [
+    openAction,
+    () => { console.log("This runs too") }
+  ]
+}, [someVar, "strings-too"]);
 ```
 

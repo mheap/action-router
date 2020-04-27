@@ -1,4 +1,4 @@
-module.exports = function(routes, eventAndAction) {
+module.exports = function(routes, args, eventAndAction) {
   if (Object.keys(routes).length < 1) {
     throw new Error("No routes provided");
   }
@@ -37,7 +37,7 @@ module.exports = function(routes, eventAndAction) {
   // Execute any methods passed
   const promises = [];
   for (let method of methods) {
-    promises.push(method());
+    promises.push(method.apply(method, args));
   }
 
   return Promise.all(promises);
