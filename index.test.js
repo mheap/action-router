@@ -16,7 +16,7 @@ test("throws when the current event isn't listed", () => {
   expect(() =>
     router(
       {
-        "issue.created": function() {}
+        "issue.created": function () {},
       },
       [],
       "pull_request.labeled"
@@ -28,19 +28,19 @@ test("throws when there are no functions defined for an event", () => {
   expect(() =>
     router(
       {
-        "pull_request.labeled": []
+        "pull_request.labeled": [],
       },
       [],
       "pull_request.labeled"
     )
-  ).toThrow(`No functions defined for 'pull_request.labeled'`);
+  ).toThrow(`No entries found for 'pull_request.labeled'`);
 });
 
 test("throws when the provided entry isn't a function", () => {
   expect(() =>
     router(
       {
-        "pull_request.labeled": [function() {}, "Hello", true]
+        "pull_request.labeled": [function () {}, "Hello", true],
       },
       [],
       "pull_request.labeled"
@@ -57,12 +57,12 @@ test("pulls the event and action from the environment when not provided", () => 
     return { action: "labeled" };
   });
   const spy = jest.mock(process.env.GITHUB_EVENT_PATH, eventPathFn, {
-    virtual: true
+    virtual: true,
   });
 
   const fn = jest.fn();
   router({
-    "pull_request.labeled": [fn]
+    "pull_request.labeled": [fn],
   });
 
   // Expect the mock that we provided as module.exports
@@ -77,7 +77,7 @@ test("executes with an event subtype", () => {
   const fn = jest.fn();
   router(
     {
-      "pull_request.labeled": [fn]
+      "pull_request.labeled": [fn],
     },
     [],
     "pull_request.labeled"
@@ -90,7 +90,7 @@ test("executes without an event subtype", () => {
   const fn = jest.fn();
   router(
     {
-      pull_request: [fn]
+      pull_request: [fn],
     },
     [],
     "pull_request.labeled"
@@ -99,11 +99,27 @@ test("executes without an event subtype", () => {
   expect(fn).toBeCalled();
 });
 
+test("executes both subtypes and parent functions", () => {
+  const fn = jest.fn();
+  const fn2 = jest.fn();
+  router(
+    {
+      pull_request: [fn],
+      "pull_request.labeled": [fn2],
+    },
+    [],
+    "pull_request.labeled"
+  );
+
+  expect(fn).toBeCalled();
+  expect(fn2).toBeCalled();
+});
+
 test("does not pass anything to the executed function", () => {
   const fn = jest.fn();
   router(
     {
-      pull_request: [fn]
+      pull_request: [fn],
     },
     [],
     "pull_request.labeled"
@@ -119,7 +135,7 @@ test("passes any parameters defined", () => {
   const arg = jest.fn();
   router(
     {
-      pull_request: [fn]
+      pull_request: [fn],
     },
     ["foo"],
     "pull_request.labeled"
@@ -131,7 +147,7 @@ test("supports a single function being passed", () => {
   const fn = jest.fn();
   router(
     {
-      pull_request: fn
+      pull_request: fn,
     },
     [],
     "pull_request.labeled"
@@ -143,7 +159,7 @@ test("supports an array of functions being passed", () => {
   const fn = jest.fn();
   router(
     {
-      pull_request: [fn]
+      pull_request: [fn],
     },
     [],
     "pull_request.labeled"
@@ -156,7 +172,7 @@ test("runs multiple functions if provided", () => {
   const fn2 = jest.fn();
   router(
     {
-      pull_request: [fn, fn2]
+      pull_request: [fn, fn2],
     },
     [],
     "pull_request.labeled"
@@ -172,7 +188,7 @@ test("returns an array of promises", async () => {
 
   const result = await router(
     {
-      pull_request: [fn, fn2]
+      pull_request: [fn, fn2],
     },
     [],
     "pull_request.labeled"

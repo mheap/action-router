@@ -1,4 +1,4 @@
-module.exports = function(routes, args, eventAndAction) {
+module.exports = function (routes, args, eventAndAction) {
   if (Object.keys(routes).length < 1) {
     throw new Error("No routes provided");
   }
@@ -10,26 +10,22 @@ module.exports = function(routes, args, eventAndAction) {
 
   let [event, action] = eventAndAction.split(".");
 
-  let methods;
+  let methods = [];
+
   if (routes[eventAndAction]) {
-    methods = routes[eventAndAction];
-  } else if (routes[event]) {
-    methods = routes[event];
-  } else {
+    methods = methods.concat(routes[eventAndAction]);
+  }
+
+  if (routes[event]) {
+    methods = methods.concat(routes[event]);
+  }
+
+  if (methods.length === 0) {
     throw `No entries found for '${eventAndAction}'`;
   }
 
-  // Make everything an array for consistency
-  if (!Array.isArray(methods)) {
-    methods = [methods];
-  }
-
-  if (methods.length == 0) {
-    throw `No functions defined for '${eventAndAction}'`;
-  }
-
   // Throw if any methods provided aren't a function
-  const errors = methods.filter(m => typeof m != "function");
+  const errors = methods.filter((m) => typeof m != "function");
   if (errors.length > 0) {
     throw new Error(`Not a function: ${errors.join(", ")}`);
   }
