@@ -1,6 +1,6 @@
 {
   "name": "@mheap/action-router",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Route your GitHub Actions events to the correct handler",
   "main": "index.js",
   "scripts": {
